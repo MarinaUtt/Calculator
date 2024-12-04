@@ -1,28 +1,26 @@
 let calcButtons = document.querySelector('.buttons');
 let display = document.querySelector('.display');
-let firstOperand = '';
-let secondOperand ='';
-let operator = '';
-let result = '';
+let operands = []
+let operator = []
+
 
 function clearOperand(){
-  firstOperand = '';
-  secondOperand ='';
-  operator = '';
-  result = '';
+  operator = [];
+  operands = []
 }
+
+let i = 0;
 
 calcButtons.addEventListener('click', function(event) {
   const element = event.target;
 
-  if (display.textContent === 'error'){
-    display.textContent = '';
-    clearOperand();
-  }
   if (element.classList.contains('calc-button')){
     if (element.classList.contains('number')){
-      if(!!firstOperand) {
-        secondOperand += element.textContent;
+      if (!operands[i]) {
+        operands[i] = element.textContent
+      }
+      else{
+        operands[i] += element.textContent; 
       }
       display.textContent += element.textContent;
     }
@@ -32,79 +30,54 @@ calcButtons.addEventListener('click', function(event) {
     }
     else if (element.classList.contains('operator')){
       switch (element.textContent) {
-        case '+': {
-          if (!!display.textContent && !operator) {
-            firstOperand = display.textContent;
-            operator = element.textContent;
-            display.textContent += element.textContent
-            }
-          }
-          break;
-        case '-': {
-          if (!!display.textContent && !operator) {
-            firstOperand = display.textContent;
-            operator = element.textContent;
-            display.textContent += element.textContent
-            }
-          }
-          break;
-        case '*': {
-          if (!!display.textContent && !operator) {
-            firstOperand = display.textContent;
-            operator = element.textContent;
-            display.textContent += element.textContent
-            }
-          }
-          break;
-        case '/': {
-          if (!!display.textContent && !operator) { 
-            if (secondOperand === '0'){
-              display.textContent = 'error'
-            }
-            else {
-            firstOperand = display.textContent;
-            operator = element.textContent;
-            display.textContent += element.textContent
-            }
-          }
-        }
-          break;
         case '=': {
-          if (secondOperand) {
-            switch (operator) {
-              case '+':{
-                result = (+firstOperand) + (+secondOperand)
-                display.textContent = result;
-                clearOperand();
-                }
-                break;
-              case '-':{
-                result = (+firstOperand) - (+secondOperand)
-                display.textContent = result;
-                clearOperand();
-                }
-                break;
-              case '*':{
-                result = (+firstOperand) * (+secondOperand)
-                display.textContent = result;
-                clearOperand();
-                }
-                break;                
-              case '/':{
-                if (secondOperand === '0') {
-                display.textContent = 'error'
-                }
-                else {
-                result = (+firstOperand) / (+secondOperand)
-                display.textContent = result;
-                clearOperand();
-                }}
-                break;  
+          for (let i = 0; i < operator.length ; i++) {
+            if (operator[i] === '*'){
+              operands.splice(i,2,(operands[i] * operands[i+1]))
+              operator.splice(i,1);
+              console.log(operands)
+              console.log(operator)
+            }
+            if (operator[i] === '/'){
+              operands.splice(i,2,(operands[i] / operands[i+1]))
+              operator.splice(i,1);
+              console.log(operands)
+              console.log(operator)
+            }
+          }
+          for (let i = 0; i < operator.length ; i++) {
+            if (operator[i] === '+'){
+              operands.splice(i,2,((+operands[i]) + (+operands[i+1])))
+              operator.splice(i,1);
+              console.log(operands)
+              console.log(operator)
+                
+              }
+            if (operator[i] === '-'){
+              operands.splice(i,2,((+operands[i]) - (+operands[i+1])))
+              operator.splice(i,1);
+              console.log(operands)
+              console.log(operator)
+              }  
+            }
+          }
+          display.textContent = operands[0];
+          i = 0;
+          break;
+        default: {
+          if (!!operands[i] && !operator[i]) {
+            operator[i] = element.textContent;
+            display.textContent += element.textContent
+            i++;
             }
           }
           break;
         }
-      }
     }
+    console.log(operands)
+    console.log(operator)
   }
 })
+
+
+  
